@@ -1,0 +1,107 @@
+.reservation-form-modal {
+  position: relative;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-lg);
+  animation: fadeInUp 0.25s ease both;
+}
+
+.reservation-form-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--color-bg-soft);
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  font-size: 1.05rem;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.reservation-form-modal__close:hover {
+  background: var(--color-bg-soft-2);
+  color: var(--color-primary-dark);
+}
+
+.reservation-form-modal__title {
+  font-size: 1.25rem;
+  color: var(--color-navy);
+  margin-bottom: 8px;
+  padding-right: 20px;
+}
+
+.reservation-form-modal__subtitle {
+  font-size: 0.9rem;
+  margin-bottom: 22px;
+}
+
+.reservation-form-modal__subtitle strong {
+  color: var(--color-navy);
+}
+
+.reservation-form-modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reservation-form-modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.reservation-form-modal__field span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-navy);
+}
+
+.reservation-form-modal__field input {
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 11px 14px;
+  font-size: 0.94rem;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg-soft);
+  transition: border-color 0.15s ease;
+}
+
+.reservation-form-modal__field input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background: #fff;
+}
+
+.reservation-form-modal__error {
+  font-size: 0.78rem;
+  color: var(--color-danger);
+  font-style: normal;
+}
+
+.reservation-form-modal__note {
+  font-size: 0.78rem;
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.reservation-form-modal__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}

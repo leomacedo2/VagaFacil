@@ -1,0 +1,123 @@
+.onde-estacionar {
+  padding-bottom: 100px;
+}
+
+.onde-estacionar .container {
+  padding-top: 48px;
+}
+
+.onde-estacionar__search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 9999;
+}
+
+.onde-estacionar__search .search-bar {
+  flex: 1;
+  min-width: 260px;
+}
+
+.onde-estacionar__location-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  border: 1.5px solid var(--color-border);
+  background: #fff;
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 13px 18px;
+  border-radius: var(--radius-md);
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.onde-estacionar__location-btn:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background: var(--color-bg-soft-2);
+}
+
+.onde-estacionar__location-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.onde-estacionar__location-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.84rem;
+  color: var(--color-danger);
+  margin-bottom: 12px;
+}
+
+.onde-estacionar__map {
+  margin: 24px 0 16px;
+}
+
+.onde-estacionar__hint {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--color-text-muted);
+}
+
+.onde-estacionar__results {
+  margin-top: 48px;
+}
+
+.onde-estacionar__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.onde-estacionar__error,
+.onde-estacionar__empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--color-text-muted);
+  background: var(--color-bg-soft);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+}
+
+.onde-estacionar__empty p:first-child {
+  font-weight: 600;
+  color: var(--color-navy);
+  margin-bottom: 4px;
+}
+
+.onde-estacionar__disclaimer {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  font-size: 0.82rem;
+}
+
+.onde-estacionar__disclaimer svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.onde-estacionar__disclaimer p {
+  color: var(--color-warning-text);
+}
+
+@media (max-width: 640px) {
+  .onde-estacionar__search {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

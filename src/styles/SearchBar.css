@@ -1,0 +1,127 @@
+.search-bar {
+  position: relative;
+  width: 100%;
+}
+
+.search-bar__field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.search-bar__field:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 4px rgba(37, 84, 232, 0.12);
+}
+
+.search-bar__icon {
+  color: var(--color-primary);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.search-bar__field input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1rem;
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+.search-bar__spinner {
+  color: var(--color-text-muted);
+  animation: spin 0.8s linear infinite;
+}
+
+.search-bar__clear {
+  border: none;
+  background: var(--color-bg-soft-2);
+  color: var(--color-text-muted);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.search-bar__suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  z-index: 50;
+  max-height: 320px;
+  overflow-y: auto;
+  z-index:10000;
+}
+
+.search-bar__suggestions li button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.search-bar__suggestions li:last-child button {
+  border-bottom: none;
+}
+
+.search-bar__suggestions li button:hover {
+  background: var(--color-bg-soft);
+}
+
+.search-bar__suggestions li button svg {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.search-bar__suggestions li button span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.search-bar__suggestions li button strong {
+  font-size: 0.9rem;
+  color: var(--color-navy);
+}
+
+.search-bar__suggestions li button small {
+  font-size: 0.76rem;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.search-bar__message {
+  padding: 14px 16px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}

@@ -1,0 +1,36 @@
+.minhas-reservas {
+  padding-bottom: 100px;
+}
+
+.minhas-reservas .container {
+  padding-top: 48px;
+}
+
+.minhas-reservas__list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 780px;
+}
+
+.minhas-reservas__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  padding: 80px 20px;
+  background: var(--color-bg-soft);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.minhas-reservas__empty-icon {
+  font-size: 2.6rem;
+  color: var(--color-primary);
+}
+
+.minhas-reservas__empty p {
+  font-size: 1.05rem;
+  color: var(--color-text-muted);
+}

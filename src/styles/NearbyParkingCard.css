@@ -1,0 +1,107 @@
+.nearby-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nearby-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.nearby-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.nearby-card__name {
+  font-size: 1rem;
+  color: var(--color-navy);
+}
+
+.nearby-card__badge {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.nearby-card__badge--parking {
+  background: var(--color-bg-soft-2);
+  color: var(--color-primary-dark);
+}
+
+.nearby-card__badge--street {
+  background: var(--color-warning-bg);
+  color: var(--color-warning-text);
+}
+
+.nearby-card__info {
+  display: flex;
+  gap: 16px;
+}
+
+.nearby-card__info span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.nearby-card__price {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-navy);
+  font-size: 0.92rem;
+}
+
+.nearby-card__address {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.nearby-card__warning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--color-warning-text);
+  background: var(--color-warning-bg);
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.nearby-card__route {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.84rem;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s ease;
+}
+
+.nearby-card__route:hover {
+  background: var(--color-primary-dark);
+}

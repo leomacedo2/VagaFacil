@@ -1,0 +1,138 @@
+/* =========================================================
+   VagaFácil — Design tokens
+   Paleta azul/branco moderna, inspirada em apps de mobilidade.
+   ========================================================= */
+:root {
+  /* Cores */
+  --color-primary: #2554e8;
+  --color-primary-dark: #163bab;
+  --color-primary-darker: #0d2472;
+  --color-sky: #3fb6f5;
+  --color-navy: #0a1533;
+  --color-navy-soft: #142250;
+  --color-bg: #ffffff;
+  --color-bg-soft: #f4f7fd;
+  --color-bg-soft-2: #eaf0fc;
+  --color-border: #e1e8f7;
+  --color-text: #101a33;
+  --color-text-muted: #5b6a8c;
+  --color-success: #16a34a;
+  --color-success-bg: #e9f9ef;
+  --color-danger: #e0433f;
+  --color-danger-bg: #fdeceb;
+  --color-warning-bg: #fff6e0;
+  --color-warning-text: #8a6100;
+
+  /* Tipografia */
+  --font-display: "Sora", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+
+  /* Espaçamento */
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shadow-sm: 0 2px 8px rgba(16, 26, 51, 0.06);
+  --shadow-md: 0 8px 24px rgba(16, 26, 51, 0.10);
+  --shadow-lg: 0 16px 48px rgba(16, 26, 51, 0.16);
+  --header-height: 72px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+p {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.container {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.page {
+  min-height: calc(100vh - var(--header-height));
+  padding-top: var(--header-height);
+}
+
+/* Foco visível para acessibilidade */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--color-sky);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Utilidades */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

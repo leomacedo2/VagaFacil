@@ -1,0 +1,36 @@
+.info-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.info-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--color-bg-soft-2);
+  color: var(--color-primary);
+  font-size: 1.4rem;
+  margin-bottom: 16px;
+}
+
+.info-card__title {
+  font-size: 1.1rem;
+  color: var(--color-navy);
+  margin-bottom: 8px;
+}
+
+.info-card__description {
+  font-size: 0.92rem;
+}
