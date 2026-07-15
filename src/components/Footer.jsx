@@ -72,7 +72,6 @@ function Footer() {
           </ul>
         </div>
       </div>
-
       <div className="footer__bottom">
         <p>© {year} VagaFácil • Desenvolvido por Leonardo Macedo e Gustavo Levy • Projeto acadêmico em React</p>
       </div>
