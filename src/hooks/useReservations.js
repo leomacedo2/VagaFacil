@@ -3,48 +3,58 @@ import {
   getReservations,
   saveReservation,
   removeReservation,
-  clearReservations,
-} from "../utils/storage";
+} from "../services/reservationsService";
+import useAuth from "./useAuth";
 
 /**
- * Hook que expõe as reservas salvas no LocalStorage como estado React,
- * evitando que páginas e componentes acessem storage.js diretamente
- * sem necessidade de recarregar a página para refletir mudanças.
+ * Hook que expõe as reservas do usuário autenticado como estado React.
+ * Antes lia do LocalStorage (utils/storage.js); agora busca no Firestore
+ * através de reservationsService.js, sempre filtrando pelo uid do usuário
+ * logado (useAuth). A interface pública do hook não mudou — apenas passou
+ * a ser assíncrona internamente.
  */
 function useReservations() {
+  const { user } = useAuth();
   const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(() => {
-    setReservations(getReservations());
-  }, []);
+  const refresh = useCallback(async () => {
+    if (!user) {
+      setReservations([]);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const data = await getReservations(user.uid);
+      setReservations(data);
+    } finally {
+      setLoading(false);
+    }
+  }, [user]);
 
   useEffect(() => {
     refresh();
   }, [refresh]);
 
   const addReservation = useCallback(
-    (reservation) => {
-      const created = saveReservation(reservation);
-      refresh();
+    async (reservation) => {
+      const created = await saveReservation({ ...reservation, uid: user.uid });
+      await refresh();
       return created;
     },
-    [refresh]
+    [user, refresh]
   );
 
   const cancelReservation = useCallback(
-    (reservationId) => {
-      removeReservation(reservationId);
-      refresh();
+    async (reservationId) => {
+      await removeReservation(reservationId);
+      await refresh();
     },
     [refresh]
   );
 
-  const clearAll = useCallback(() => {
-    clearReservations();
-    refresh();
-  }, [refresh]);
-
-  return { reservations, addReservation, cancelReservation, clearAll, refresh };
+  return { reservations, loading, addReservation, cancelReservation, refresh };
 }
 
 export default useReservations;

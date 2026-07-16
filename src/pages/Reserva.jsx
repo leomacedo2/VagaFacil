@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
 import { FiMapPin, FiCalendar, FiTag, FiAlertTriangle } from "react-icons/fi";
 import SectionTitle from "../components/SectionTitle";
 import ParkingSpot from "../components/ParkingSpot";
@@ -12,7 +12,9 @@ import Button from "../components/Button";
 import events from "../data/events";
 import useParkingSearch from "../hooks/useParkingSearch";
 import useReservations from "../hooks/useReservations";
-import { getReservedSpotsForEvent } from "../utils/storage";
+import useAuth from "../hooks/useAuth";
+import { getReservedSpotsForEvent } from "../services/reservationsService";
+import { sendReservationConfirmationEmail } from "../services/emailService";
 import "../styles/Reserva.css";
 
 const TOTAL_SPOTS = 30;
@@ -25,6 +27,14 @@ function formatDate(dateString) {
     day: "2-digit",
     month: "long",
     year: "numeric",
+  });
+}
+
+function formatTime(dateString) {
+  const date = new Date(dateString);
+  return date.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
@@ -62,18 +72,29 @@ function buildOccupiedSpots(eventId) {
 function Reserva() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const event = events.find((item) => item.id === id);
+  const { user } = useAuth();
 
-  const alreadyReserved = useMemo(
-    () => new Set(getReservedSpotsForEvent(id)),
-    [id]
-  );
+  const [reservedSpots, setReservedSpots] = useState([]);
+
+  useEffect(() => {
+    let isActive = true;
+
+    getReservedSpotsForEvent(id).then((spots) => {
+      if (isActive) setReservedSpots(spots);
+    });
+
+    return () => {
+      isActive = false;
+    };
+  }, [id]);
 
   const occupiedSpots = useMemo(() => {
     const base = buildOccupiedSpots(id);
-    alreadyReserved.forEach((spot) => base.add(spot));
+    reservedSpots.forEach((spot) => base.add(spot));
     return base;
-  }, [id, alreadyReserved]);
+  }, [id, reservedSpots]);
 
   const [selectedSpot, setSelectedSpot] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -109,27 +130,52 @@ function Reserva() {
   };
 
   const handleConfirmClick = () => {
-    if (selectedSpot) setModalOpen(true);
+    if (!selectedSpot) return;
+
+    if (!user) {
+      navigate("/login", { state: { from: location.pathname } });
+      return;
+    }
+
+    setModalOpen(true);
   };
 
-  const handleFormSubmit = ({ name, email }) => {
-    addReservation({
-      eventId: event.id,
-      eventTitle: event.title,
-      image: event.image,
-      date: event.date,
-      location: event.location,
-      parkingSpot: selectedSpot,
-      customerName: name,
-      customerEmail: email,
-    });
+  const handleFormSubmit = async ({ name, email }) => {
+    try {
+      await addReservation({
+        eventId: event.id,
+        eventTitle: event.title,
+        image: event.image,
+        date: event.date,
+        location: event.location,
+        parkingSpot: selectedSpot,
+        customerName: name,
+        customerEmail: email,
+      });
 
-    setModalOpen(false);
-    setToastVisible(true);
+      // Envia o e-mail de confirmação em segundo plano: a reserva já foi
+      // salva, então uma falha no envio não deve travar o fluxo do usuário.
+      sendReservationConfirmationEmail({
+        toName: name,
+        toEmail: email,
+        eventTitle: event.title,
+        eventDate: formatDate(event.date),
+        eventTime: formatTime(event.date),
+        eventLocation: event.location,
+        parkingSpot: selectedSpot,
+      }).catch((emailError) => {
+        console.error("Erro ao enviar e-mail de confirmação:", emailError);
+      });
 
-    setTimeout(() => {
-      navigate("/minhas-reservas");
-    }, 1200);
+      setModalOpen(false);
+      setToastVisible(true);
+
+      setTimeout(() => {
+        navigate("/minhas-reservas");
+      }, 1200);
+    } catch (reservationError) {
+      console.error("Erro ao salvar reserva:", reservationError);
+    }
   };
 
   return (

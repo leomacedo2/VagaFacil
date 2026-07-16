@@ -10,7 +10,9 @@ import Reserva from "./pages/Reserva";
 import OndeEstacionar from "./pages/OndeEstacionar";
 import MinhasReservas from "./pages/MinhasReservas";
 import Sobre from "./pages/Sobre";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const location = useLocation();
@@ -37,8 +39,16 @@ function App() {
           <Route path="/eventos" element={<Eventos />} />
           <Route path="/reserva/:id" element={<Reserva />} />
           <Route path="/onde-estacionar" element={<OndeEstacionar />} />
-          <Route path="/minhas-reservas" element={<MinhasReservas />} />
+          <Route
+            path="/minhas-reservas"
+            element={
+              <ProtectedRoute>
+                <MinhasReservas />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/sobre" element={<Sobre />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/404" element={<NotFound />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

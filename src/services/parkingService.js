@@ -1,5 +1,6 @@
 import axios from "axios";
 import { calculateDistance, estimateWalkingTime } from "./mapsService";
+import offlineParkingFallback from "../data/offlineParkingFallback";
 
 // Serviço responsável por buscar estacionamentos e vias públicas próximas
 // utilizando a Overpass API (dados do OpenStreetMap). Segue a prioridade:
@@ -151,6 +152,33 @@ function dedupeAndSort(items) {
 }
 
 /**
+ * Filtra a base local de estacionamentos/vias conhecidos (offlineParkingFallback)
+ * por proximidade às coordenadas informadas. Usado apenas quando a Overpass
+ * API falha completamente, como última rede de segurança para que a
+ * demonstração nunca fique sem resultados por indisponibilidade da API.
+ * O raio de busca é ampliado (x2) em relação ao raio original, já que os
+ * pontos locais são aproximados e mais esparsos que os dados da Overpass.
+ */
+function getOfflineFallback(latitude, longitude, radius) {
+  const effectiveRadius = radius * 2;
+
+  const withDistance = offlineParkingFallback
+    .map((entry) => {
+      const distance = calculateDistance(latitude, longitude, entry.latitude, entry.longitude);
+      if (distance > effectiveRadius) return null;
+
+      return {
+        ...entry,
+        distance,
+        walkingTime: estimateWalkingTime(distance),
+      };
+    })
+    .filter(Boolean);
+
+  return dedupeAndSort(withDistance);
+}
+
+/**
  * Busca estacionamentos cadastrados próximos às coordenadas informadas.
  * Nunca lança exceção: em caso de falha (429, timeout, rede), retorna
  * `{ results: [], failed: true }` para que o chamador possa decidir o
@@ -201,12 +229,21 @@ export async function searchNearbyStreets(latitude, longitude, radius = 800) {
  * mantém seu próprio fallback entre mirrors e tratamento de erro, sem
  * lançar exceção em nenhum momento.
  *
+ * Se AMBAS as buscas falharem tecnicamente (todos os mirrors indisponíveis),
+ * uma última rede de segurança entra em ação: a base local offlineParkingFallback
+ * (ver `data/offlineParkingFallback.js`). Só quando nem essa base local tem
+ * pontos próximos é que a busca retorna `source: "error"`.
+ *
  * source pode ser:
  *  - "both":    estacionamentos cadastrados E vias públicas encontrados
  *  - "parking": apenas estacionamentos cadastrados encontrados
  *  - "street":  apenas vias públicas encontradas
  *  - "none":    busca concluída, mas sem resultados na região
- *  - "error":   nenhum mirror respondeu para nenhuma das buscas
+ *  - "error":   nenhum mirror respondeu, e também não há dados locais próximos
+ *
+ * O campo `offline: true` no retorno indica que os resultados vieram da
+ * base local (Overpass totalmente indisponível), caso o chamador queira
+ * tratar esse caso de forma diferenciada no futuro.
  */
 export async function searchNearbyParkingOptions(latitude, longitude, radius = 800) {
   const parking = await searchParkingSpots(latitude, longitude, radius);
@@ -217,9 +254,21 @@ export async function searchNearbyParkingOptions(latitude, longitude, radius = 8
 
   if (!hasParking && !hasStreets) {
     // Nenhum dos dois tipos retornou resultado. Se as duas buscas falharam
-    // por problema técnico (não por ausência real de dados), avisa o
-    // usuário de forma amigável em vez de mostrar apenas "nenhum resultado".
+    // por problema técnico (não por ausência real de dados na região),
+    // tenta a base local antes de desistir — o usuário nunca deve ficar
+    // sem resultados apenas porque a Overpass API está indisponível.
     if (parking.failed && streets.failed) {
+      const offlineResults = getOfflineFallback(latitude, longitude, radius);
+
+      if (offlineResults.length > 0) {
+        const hasOfflineParking = offlineResults.some((item) => item.kind === "parking");
+        const hasOfflineStreets = offlineResults.some((item) => item.kind === "street");
+        const offlineSource =
+          hasOfflineParking && hasOfflineStreets ? "both" : hasOfflineParking ? "parking" : "street";
+
+        return { source: offlineSource, results: offlineResults, offline: true };
+      }
+
       return {
         source: "error",
         results: [],
